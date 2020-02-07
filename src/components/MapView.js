@@ -11,19 +11,14 @@ const Map = withScriptjs(withGoogleMap((props) =>
 ))
 
 class MapView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            marker: {
-                lat: 0, 
-                lng: 0
-            }
-        };
+    static defaultProps = {
+        lat: 0, 
+        lng: 0
     }
 
     render() {
         return (
-            <Map {...this.props} lat={this.state.marker.lat} lng={this.state.marker.lng}/>
+            <Map {...this.props} lat={this.props.lat} lng={this.props.lng}/>
         );
     }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MDBBtn, MDBCol, MDBContainer, MDBRow } from "mdbreact";
+import { MDBCol, MDBContainer, MDBRow } from "mdbreact";
 import "./css/index.css";
 import SearchBar from "./components/SearchBar";
 import AdressesView from "./components/AdressesView";
@@ -10,8 +10,21 @@ const SEARCHBAR_HEIGHT = 60;
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = { width: 0, height: 0 };
+        this.state = { 
+            width: 0, 
+            height: 0,
+
+            // Searchbar
+            data: [],
+
+            // Map shown markers
+            currLat: 0,
+            currLng: 0,
+        };
+
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+        this.handleSearchBarChange  = this.handleSearchBarChange.bind(this);
+        this.handleAdressClick      = this.handleAdressClick.bind(this);
     }
 
     componentDidMount() {
@@ -27,22 +40,44 @@ class App extends Component {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
+    handleSearchBarChange(recvData) {
+        this.setState((state, props) =>({
+            data: recvData
+        }));
+
+        //console.log(this.state);
+    }
+
+    handleAdressClick(lat, lng) {
+        this.setState((state, props) =>({
+            currLat: lat,
+            currLng: lng,
+        }));
+
+        console.log(this.state)
+    }
+
     render() {
         return (
             <MDBContainer fluid style={styles.container}>
                 <MDBRow>
                     <MDBCol md="12" style={styles.navBar}>
-                        <SearchBar />
+                        <SearchBar handleSearchBarChange={this.handleSearchBarChange} />
                     </MDBCol>
                 </MDBRow>
                 
                 <MDBRow>
                     <MDBCol style={{ ...styles.leftMenu, height:this.state.height - SEARCHBAR_HEIGHT }} md="3">
-                        <AdressesView />
+                        <AdressesView 
+                            data={this.state.data}
+                            handleAdressClick={this.handleAdressClick}
+                        />
                     </MDBCol>
                     
                     <MapView
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOQV6fkseH2jIfOZOgxsispimh8me2mcY&v=3.exp&libraries=geometry,drawing,places"                        
+                        lat={this.state.currLat}
+                        lng={this.state.currLng}
+                        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"                        
                         containerElement={<MDBCol style={{ ...styles.content, height:this.state.height - SEARCHBAR_HEIGHT }} md="9" />}
                         loadingElement={<div style={{ height: `100%` }} />}
                         mapElement={<div style={{ height: `100%` }} />}

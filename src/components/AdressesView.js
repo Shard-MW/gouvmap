@@ -1,38 +1,51 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 import AdresseCard from "./AdresseCard";
 
-import data from '../data/example';
-
 class AdressesView extends Component {
-    static defaultProps = {
-        data: [],
-    }
+    translateType(type) {
+        switch (type) {
+            case "housenumber": 
+                return "N° de rue";               
+                break;
 
-    constructor(props) {
-        super(props);
-        this.state = { 
-            //adresses : this.props.data
-            adresses : data.features
-        };
+            case "street":
+                return "Rue";                
+                break;
+
+            case "locality":
+                return "Lieu-dit";                
+                break;
+
+            case "municipality":
+                return "Municipalité";             
+                break;
+        
+            default:
+                return type;
+                break;
+        }
     }
 
     render() {
         return (
             <>
                 {
-                    this.state.adresses.map((adress) => 
-                        <AdresseCard key={adress.properties.id} title={adress.properties.label} type={adress.properties.type} desc={adress.properties.context}/>
+                    this.props.data && this.props.data.map((adress) => 
+                        <AdresseCard key={adress.properties.id} 
+                            title={adress.properties.label} 
+                            type={this.translateType(adress.properties.type)} 
+                            desc={adress.properties.context}
+
+                            lat={adress.geometry.coordinates[1]}
+                            lng={adress.geometry.coordinates[0]}
+
+                            handleAdressClick={this.props.handleAdressClick}
+                        />
                     )
                 }
             </>
         );
     }
 }
-
-AdressesView.propTypes = {
-    data: PropTypes.array,
-};
-
 
 export default AdressesView;

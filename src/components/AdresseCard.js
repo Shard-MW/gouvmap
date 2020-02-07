@@ -7,13 +7,22 @@ class AdresseCard extends Component {
     static defaultProps = {
         title: 'Adresse',
         type : 'Rue',
-        desc : 'Contexte'
+        desc : 'Contexte',
+
+        lat: 0, 
+        lng: 0,
     }
 
     render() {
         return (
             <>
-                <div className="container md-12 adressCard" style={styles.container}>
+                <div 
+                    className="container md-12 adressCard" style={styles.container} 
+                    onClick={
+                        (e) => {
+                            this.props.handleAdressClick(this.props.lat, this.props.lng);
+                        }
+                    }>
                     <div className="show">
                         <div className="toast-header" style={styles.cardHeader}>
                             <i className="fa fa-map-pin fa-lg mr-2 text-danger"></i>
@@ -34,15 +43,19 @@ AdresseCard.propTypes = {
     title: PropTypes.string,
     type : PropTypes.string,
     desc : PropTypes.string,
+
+    lat : PropTypes.number,
+    lng : PropTypes.number,
 };
 
 const styles = {
     container: {
         //border: '1px solid black',
         padding: '1rem',
-        transition: 'all .2s',
+        transition: 'all .1s',
         marginBottom: '0.5rem',
-        borderRadius:'2px'
+        borderRadius:'2px',
+        cursor: 'pointer',
     },
     card : {
         width:'100%',
